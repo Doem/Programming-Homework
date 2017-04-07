@@ -15,7 +15,7 @@ HugeInteger::HugeInteger(unsigned int n) {
 bool HugeInteger::equal(HugeInteger right) {
 	if (size != right.size)	return false;
 
-	for (int i = size; i >= 0; i--)
+	for (int i = size - 1; i >= 0; i--)
 		if (elems[i] != right.elems[i])	return false;
 	return true;
 }
@@ -29,7 +29,7 @@ bool HugeInteger::less(HugeInteger right) {
 	if (size < right.size)	return true;
 	if (size > right.size)	return false;
 
-	for (int i = size; i >= 0; i--) {
+	for (int i = size - 1; i >= 0; i--) {
 		if (elems[i] < right.elems[i])	return true;
 		if (elems[i] > right.elems[i])	return false;
 	}
