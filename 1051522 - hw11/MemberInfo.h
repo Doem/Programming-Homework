@@ -61,6 +61,6 @@ string MemberInfo::getName() const {
 }
 
 bool MemberInfo::validatePassword(string userPassword) const {
-	return (string(password) == userPassword);
+	return (password == userPassword);
 }
 #endif

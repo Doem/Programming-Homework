@@ -37,7 +37,6 @@ Login::Login(MemberDatabase &_MemberDatabase, ReservationDatabase &_ReservationD
 }
 
 void Login::execute() {
-
 	while (!userAuthenticated) {
 		cout << "\nPlease enter your account number: ";
 		getline(cin, currentAccountNumber);
@@ -67,12 +66,12 @@ void Login::performTransactions() {
 		if (choice == 1) {
 			transaction = new MakeReservation(currentAccountNumber, reservationDatabase);
 			transaction->execute();
-			//delete transaction;
+			delete transaction;
 		}
 		else if (choice == 2) {
 			transaction = new ViewCancelReservation(currentAccountNumber, reservationDatabase);
 			transaction->execute();
-			//delete transaction;
+			delete transaction;
 		}
 		else
 			break;

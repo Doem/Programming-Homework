@@ -35,24 +35,24 @@ void MakeReservation::execute() {
 	stringstream ss;
 
 	newReservation.setAccountNumber(getAccountNumber());
-
+	//------------------------------------------------------------------------//
 	cout << endl;
 	for (int i = 1; i <= 15; ++i)
 		cout << right << setw(2) << i << ". " << branches[i] << endl;
 	cout << "\nEnter your choice: ";
 	newReservation.setBranch(string(branches[inputAnInteger(1, 15)]));
-
+	//------------------------------------------------------------------------//
 	cout << "\nEnter date (yyyy-mm-dd): ";
 	getline(cin, temp);
 	newReservation.setDate(temp);
-
+	//------------------------------------------------------------------------//
 	cout << "\nEnter hour (0бу23): ";
 	ss << inputAnInteger(0, 23); ss >> temp;
 	newReservation.setHour(temp);
-
+	//------------------------------------------------------------------------//
 	cout << "\nEnter the number of customers (1~30): ";
 	newReservation.setCustomerNumber(inputAnInteger(1, 30));
-
+	//------------------------------------------------------------------------//
 	cout << "\n 1. Standard Room\n 2. Party Room\n\nEnter your choice: (1~2): ";
 	switch (inputAnInteger(1, 2)) {
 		case 1:
@@ -62,6 +62,7 @@ void MakeReservation::execute() {
 			newReservation.setRoomType(string("Party"));
 			break;
 	}
+	//------------------------------------------------------------------------//
 	cout << "\nReservation Completed!\n";
 	getReservationDatabase().pushBack(newReservation);
 }

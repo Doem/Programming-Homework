@@ -5,7 +5,7 @@
 // VecIterator class template definition
 template< typename T >
 class VecIterator {
-	template< typename T > friend class vector;
+	//template< typename T > friend class vector;
 	public:
 	VecIterator(T *p = 0) // default constructor
 		: ptr(p) {
@@ -164,7 +164,7 @@ vector<T>::vector(const vector<T> &vectorToCopy) {
 	ReAlloc(myFirst, vectorToCopy.size());
 	for (int i = 0; i < vectorToCopy.size(); ++i)
 		myFirst[i] = vectorToCopy.myFirst[i];
-	myLast = myEnd = myFirst + size();
+	myLast = myEnd = myFirst + vectorToCopy.size();
 }
 
 // destructor; destroys the vector
@@ -179,7 +179,6 @@ const vector<T> &vector<T>::operator=(const vector<T> &right) {
 	resize(right.size());
 	for (int i = 0; i < size(); ++i)
 		myFirst[i] = right.myFirst[i];
-	myLast = myEnd = myFirst + size();
 	return *this;
 }
 
@@ -229,15 +228,15 @@ unsigned int vector< T >::capacity() const {
 
 template<typename T>
 void vector<T>::resize(unsigned int n) {
-	if (n > size()) {
+	if (n > capacity()) {
 		vector temp(*this);
 
 		ReAlloc(myFirst, n);
-		for (int i = 0; i < n; ++i)
+		for (int i = 0; i < temp.size(); ++i)
 			myFirst[i] = temp.myFirst[i];
 		myLast = myEnd = myFirst + n;
 	}
-	else if (n < size())
+	else if (n < capacity())
 		myLast = myFirst + n;
 }
 

@@ -33,10 +33,10 @@ void Registration::execute() {
 
 		cout << "\nInput your Name: ";
 		getline(cin, _name);
+		cout << "\nChoose an account number: ";
 		break;
 	}
 
-	cout << "\nChoose an account number: ";
 	while (1) {
 		getline(cin, _accountNumber);
 		
