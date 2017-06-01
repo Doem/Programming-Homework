@@ -7,10 +7,11 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 
-class ViewCancelReservation:public TimeTable {
+class ViewCancelReservation :public TimeTable {
 	public:
 	ViewCancelReservation(vector<Reservation>&);
 
@@ -24,8 +25,8 @@ class ViewCancelReservation:public TimeTable {
 	int inputAnInteger(int begin, int end);
 };
 
-ViewCancelReservation::ViewCancelReservation(vector<Reservation> &_reservationDataBase) 
-	:reservationDataBase(_reservationDataBase) , index(-1){
+ViewCancelReservation::ViewCancelReservation(vector<Reservation> &_reservationDataBase)
+	:reservationDataBase(_reservationDataBase), index(-1) {
 }
 
 void ViewCancelReservation::execute() {
@@ -33,7 +34,7 @@ void ViewCancelReservation::execute() {
 
 	cout << "\nEnter ID Number: ";
 	cin >> IDNumber;
-	
+
 	cout << "\nEnter Reservation Number: ";
 	cin >> ReservationNumber;
 	cin.ignore();
@@ -49,7 +50,7 @@ void ViewCancelReservation::execute() {
 	}
 
 	showReservation(index);
-	
+
 
 	while (1) {
 		displayMainMenu();
@@ -112,7 +113,7 @@ void ViewCancelReservation::showReservation(int index) {
 		<< setw(9) << StationName[reservationDataBase[index].getOriginStation()]
 		<< setw(10) << StationName[reservationDataBase[index].getDestinationStation()]
 		<< setw(12) << reservationDataBase[index].getDate();
-	
+
 	if (reservationDataBase[index].getOriginStation() < reservationDataBase[index].getDestinationStation()) {
 		for (int i = 0; i < Southbound.size(); ++i) {
 			if (Southbound[i].getTrainNumber() == reservationDataBase[index].getTrainNumber())
@@ -123,14 +124,15 @@ void ViewCancelReservation::showReservation(int index) {
 	else if (reservationDataBase[index].getOriginStation() > reservationDataBase[index].getDestinationStation()) {
 		for (int i = 0; i < Northbound.size(); ++i) {
 			if (Northbound[i].getTrainNumber() == reservationDataBase[index].getTrainNumber())
-				cout << right << setw(11) << Northbound[i].getDepartureTimes(reservationDataBase[index].getOriginStation())
-				<< setw(9) << Northbound[i].getDepartureTimes(reservationDataBase[index].getDestinationStation());
+				cout << right << setw(11) << Northbound[i].getDepartureTimes(13 - reservationDataBase[index].getOriginStation())
+				<< setw(9) << Northbound[i].getDepartureTimes(13 - reservationDataBase[index].getDestinationStation());
 		}
 	}
-	
-	cout << right << setw(6) << adultTicketPrice[reservationDataBase[index].getDestinationStation()][reservationDataBase[index].getOriginStation()] << "*" << reservationDataBase[index].getAdultTickets()
-		<< setw(10) << concessionTicketPrice[reservationDataBase[index].getDestinationStation()][reservationDataBase[index].getOriginStation()] << "*" << reservationDataBase[index].getConcessionTickets()
-		<< setw(6) << adultTicketPrice[reservationDataBase[index].getDestinationStation()][reservationDataBase[index].getOriginStation()] * reservationDataBase[index].getAdultTickets() + concessionTicketPrice[reservationDataBase[index].getDestinationStation()][reservationDataBase[index].getOriginStation()] * reservationDataBase[index].getConcessionTickets()
+
+
+	cout << right << setw(6) << adultTicketPrice[max(reservationDataBase[index].getOriginStation(), reservationDataBase[index].getDestinationStation())][min(reservationDataBase[index].getOriginStation(), reservationDataBase[index].getDestinationStation())] << "*" << reservationDataBase[index].getAdultTickets()
+		<< setw(10) << concessionTicketPrice[max(reservationDataBase[index].getOriginStation(), reservationDataBase[index].getDestinationStation())][min(reservationDataBase[index].getOriginStation(), reservationDataBase[index].getDestinationStation())] << "*" << reservationDataBase[index].getConcessionTickets()
+		<< setw(6) << adultTicketPrice[max(reservationDataBase[index].getOriginStation(), reservationDataBase[index].getDestinationStation())][min(reservationDataBase[index].getOriginStation(), reservationDataBase[index].getDestinationStation())] * reservationDataBase[index].getAdultTickets() + concessionTicketPrice[max(reservationDataBase[index].getOriginStation(), reservationDataBase[index].getDestinationStation())][min(reservationDataBase[index].getOriginStation(), reservationDataBase[index].getDestinationStation())] * reservationDataBase[index].getConcessionTickets()
 		<< setw(10) << carTypes[reservationDataBase[index].getCarClass()] << endl;
 }
 

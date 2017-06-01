@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 int adultTicketPrice[13][13] = {
@@ -173,9 +174,9 @@ void ReservationDataBase::getDay() {
 
 void ReservationDataBase::showReservation() {
 	char carTypes[3][10] = { "", "Standard", "Business" };
-	int adultTicketMoney = adultTicketPrice[newReservation.getDestinationStation()][newReservation.getOriginStation()] * newReservation.getAdultTickets();
-	int concessionTicketMoney = concessionTicketPrice[newReservation.getDestinationStation()][newReservation.getOriginStation()] * newReservation.getConcessionTickets();
-	
+	int adultTicketMoney = adultTicketPrice[max(newReservation.getOriginStation(), newReservation.getDestinationStation())][min(newReservation.getOriginStation(), newReservation.getDestinationStation())] * newReservation.getAdultTickets();
+	int concessionTicketMoney = concessionTicketPrice[max(newReservation.getOriginStation(), newReservation.getDestinationStation())][min(newReservation.getOriginStation(), newReservation.getDestinationStation())] * newReservation.getConcessionTickets();
+
 	cout << "\nTrain No.    From        To        Date  Departure  Arrival   Adult  Concession  Fare     Class\n";
 	cout << right << setw(8) << newReservation.getTrainNumber()
 		<< setw(9) << StationName[newReservation.getOriginStation()]
@@ -183,8 +184,8 @@ void ReservationDataBase::showReservation() {
 		<< setw(12) << newReservation.getDate()
 		<< setw(11) << trainList[newReservation.getTrainNumber()].first
 		<< setw(9) << trainList[newReservation.getTrainNumber()].second
-		<< setw(6) << adultTicketPrice[newReservation.getDestinationStation()][newReservation.getOriginStation()] << "*" << newReservation.getAdultTickets()
-		<< setw(10) << concessionTicketPrice[newReservation.getDestinationStation()][newReservation.getOriginStation()] << "*" << newReservation.getConcessionTickets()
+		<< setw(6) << adultTicketPrice[max(newReservation.getOriginStation(), newReservation.getDestinationStation())][min(newReservation.getOriginStation(), newReservation.getDestinationStation())] << "*" << newReservation.getAdultTickets()
+		<< setw(10) << concessionTicketPrice[max(newReservation.getOriginStation(), newReservation.getDestinationStation())][min(newReservation.getOriginStation(), newReservation.getDestinationStation())] << "*" << newReservation.getConcessionTickets()
 		<< setw(6) << adultTicketMoney + concessionTicketMoney
 		<< setw(10) << carTypes[newReservation.getCarClass()] << endl;
 }
@@ -211,15 +212,15 @@ void ReservationDataBase::showTrainTable(int DepartureTimeCode) {
 	}
 	else if (newReservation.getOriginStation() > newReservation.getDestinationStation()) {
 		for (int i = 0; i < Northbound.size() && index < 5; ++i) {
-			if (Northbound[i].getDepartureTimes(newReservation.getOriginStation()) == "-")	continue;
-			int trainHour = (Northbound[i].getDepartureTimes(newReservation.getOriginStation())[0] - '0') * 10 + (Northbound[i].getDepartureTimes(newReservation.getOriginStation())[1] - '0');
-			int trainMinute = (Northbound[i].getDepartureTimes(newReservation.getOriginStation())[3] - '0') * 10 + (Northbound[i].getDepartureTimes(newReservation.getOriginStation())[4] - '0');
+			if (Northbound[i].getDepartureTimes(13 - newReservation.getOriginStation()) == "-")	continue;
+			int trainHour = (Northbound[i].getDepartureTimes(13 - newReservation.getOriginStation())[0] - '0') * 10 + (Northbound[i].getDepartureTimes(13 - newReservation.getOriginStation())[1] - '0');
+			int trainMinute = (Northbound[i].getDepartureTimes(13 - newReservation.getOriginStation())[3] - '0') * 10 + (Northbound[i].getDepartureTimes(13 - newReservation.getOriginStation())[4] - '0');
 
 			if ((trainHour > hour) || (trainHour == hour && trainMinute >= minute)) {
-				trainList.insert(pair<string, pair<string, string>>(Northbound[i].getTrainNumber(), pair<string, string>(Northbound[i].getDepartureTimes(newReservation.getOriginStation()), Northbound[i].getDepartureTimes(newReservation.getDestinationStation()))));
+				trainList.insert(pair<string, pair<string, string>>(Northbound[i].getTrainNumber(), pair<string, string>(Northbound[i].getDepartureTimes(13 - newReservation.getOriginStation()), Northbound[i].getDepartureTimes(13 - newReservation.getDestinationStation()))));
 				cout << right << setw(8) << Northbound[i].getTrainNumber()
-					<< setw(12) << Northbound[i].getDepartureTimes(newReservation.getOriginStation())
-					<< setw(9) << Northbound[i].getDepartureTimes(newReservation.getDestinationStation()) << endl;
+					<< setw(12) << Northbound[i].getDepartureTimes(13 - newReservation.getOriginStation())
+					<< setw(9) << Northbound[i].getDepartureTimes(13 - newReservation.getDestinationStation()) << endl;
 				++index;
 			}
 		}
